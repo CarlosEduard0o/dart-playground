@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:namer_app/components/alert_card_component.dart';
 import 'package:namer_app/components/resident_card_component.dart';
+import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flutter/services.dart';
+
+const List<String> list = <String>['Masculino', 'Feminino', 'Outro'];
 
 class ResidentsPage extends StatelessWidget {
   @override
@@ -182,7 +186,10 @@ void _openForm(BuildContext context) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Preencher Formulário'),
+        title: Text(
+          'Registrar Residente',
+          textAlign: TextAlign.center,
+        ),
         content: _buildForm(),
       ),
     );
@@ -195,10 +202,78 @@ Widget _buildForm() {
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextField(decoration: InputDecoration(labelText: 'Nome')),
-        TextField(decoration: InputDecoration(labelText: 'Email')),
+        TextField(decoration: InputDecoration(labelText: 'Nome completo')),
+        DigitsOnlyTextField(
+          label: 'CPF',
+          formatter: CpfInputFormatter(),
+        ),
+        DigitsOnlyTextField(
+          label: 'Data de aniversário',
+          formatter: DataInputFormatter(),
+        ),
+        TextField(
+            decoration: InputDecoration(labelText: 'Unidade Habitacional')),
+        TextField(decoration: InputDecoration(labelText: 'Foto')),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SexDropdownButton(),
+          ],
+        ),
+        SizedBox(height: 50),
         ElevatedButton(onPressed: () {}, child: Text('Enviar')),
       ],
     ),
   );
+}
+
+class DigitsOnlyTextField extends StatelessWidget {
+  final String label;
+  final TextInputFormatter formatter;
+
+  const DigitsOnlyTextField({
+    super.key,
+    required this.label,
+    required this.formatter,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(label: Text(label)),
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        formatter,
+      ],
+    );
+  }
+}
+
+class SexDropdownButton extends StatefulWidget {
+  const SexDropdownButton({super.key});
+
+  @override
+  State<SexDropdownButton> createState() => _SexDropdownButtonState();
+}
+
+class _SexDropdownButtonState extends State<SexDropdownButton> {
+  String dropdownValue = list.first;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 16,
+      onChanged: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          dropdownValue = value!;
+        });
+      },
+      items: list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(value: value, child: Text(value));
+      }).toList(),
+    );
+  }
 }
