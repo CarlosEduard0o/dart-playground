@@ -1,7 +1,4 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,17 +9,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'Namer App',
-        theme: ThemeData(
-          useMaterial3: true,
-          // primarySwatch: Colors.orange,
-          scaffoldBackgroundColor: Colors.white10,
-        ),
-        home: MyHomePage(),
+    return MaterialApp(
+      title: 'Namer App',
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white10,
       ),
+      home: MyHomePage(),
     );
   }
 }
@@ -32,14 +25,9 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class SageIcon extends StatefulWidget {
+class SageIcon extends StatelessWidget {
   const SageIcon({super.key});
 
-  @override
-  State<SageIcon> createState() => SageIconState();
-}
-
-class SageIconState extends State<SageIcon> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -74,148 +62,157 @@ class _MyHomePageState extends State<MyHomePage> {
       case 4:
         page = SettingsPage();
         break;
+      case 5:
+        page = AuthenticationPage();
+        break;
       default:
         throw UnimplementedError('Sem widget para $selectedIndex');
     }
-    return LayoutBuilder(builder: (context, constraints) {
-      return Scaffold(
-        body: Row(
-          children: [
-            SafeArea(
-              child: NavigationRail(
-                extended: constraints.maxWidth >= 600,
-                leading: SageIcon(),
-                destinations: [
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    label: Text('Residentes'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.favorite),
-                    label: Text('Pacientes'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    label: Text('Alertas'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    label: Text('Relatórios'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    label: Text('Configurações'),
-                  ),
-                ],
-                backgroundColor: const Color.fromARGB(255, 154, 225, 255),
-                selectedIndex: selectedIndex,
-                groupAlignment: -0.9,
-                onDestinationSelected: (value) {
-                  setState(() {
-                    selectedIndex = value;
-                  });
-                },
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Scaffold(
+          body: Row(
+            children: [
+              SafeArea(
+                child: NavigationRail(
+                  extended: constraints.maxWidth >= 600,
+                  leading: const SageIcon(),
+                  destinations: const [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Residentes'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.favorite),
+                      label: Text('Pacientes'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Alertas'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Relatórios'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Configurações'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Sair'),
+                    ),
+                  ],
+                  backgroundColor: const Color.fromARGB(255, 154, 225, 255),
+                  selectedIndex: selectedIndex,
+                  groupAlignment: -0.9,
+                  onDestinationSelected: (value) {
+                    setState(() {
+                      selectedIndex = value;
+                    });
+                  },
+                ),
               ),
-            ),
-            Expanded(
-              child: Container(
-                // color: Theme.of(context).colorScheme.primaryContainer,
-                child: page,
-              ),
-            ),
-          ],
-        ),
-      );
-    });
+              Expanded(child: page),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
 class ResidentsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
-    }
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          BigCard(pair: pair),
-          SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                icon: Icon(icon),
-                label: Text('Like'),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text('Next'),
-              ),
-            ],
-          ),
-        ],
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text('Visão geral dos pacientes monitorados'),
+                      SizedBox(height: 8),
+                      Text('Buscar paciente'),
+                      SizedBox(height: 8),
+                      SearchBar(leading: Icon(Icons.search)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 32),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text('Existem alertas ativos'),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Cadastrar Paciente'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            const Expanded(child: GridResidents()),
+          ],
+        ),
       ),
     );
   }
 }
 
-class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-  void getNext() {
-    current = WordPair.random();
-    notifyListeners();
-  }
-
-  var favorites = <WordPair>[];
-
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
-    } else {
-      favorites.add(current);
-    }
-    notifyListeners();
-  }
-}
-
-class BigCard extends StatelessWidget {
-  const BigCard({
-    super.key,
-    required this.pair,
+class _ResidentCard extends StatelessWidget {
+  const _ResidentCard({
+    required this.cardName,
+    required this.cardImage,
+    required this.housingUnit,
   });
 
-  final WordPair pair;
+  final String cardName;
+  final String cardImage;
+  final String housingUnit;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final style = theme.textTheme.displayMedium!.copyWith(
-        // color: theme.colorScheme.onPrimary,
-        );
-
-    return Card(
-      // color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Text(
-          pair.asLowerCase,
-          style: style,
-          semanticsLabel: "${pair.first} ${pair.second}",
+    return Center(
+      child: Card(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: Image.asset(
+                cardImage,
+                height: 100,
+                width: 70,
+              ),
+              title: Text(cardName),
+              subtitle: Text(housingUnit),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                TextButton(
+                  child: const Text('DETALHES'),
+                  onPressed: () {},
+                ),
+                const SizedBox(width: 2),
+                TextButton(
+                  child: const Text('ATENDER'),
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -227,8 +224,7 @@ class PatientsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    return Center(child: Text('No favorites yet.'));
+    return const Center(child: Text('Página de Pacientes'));
   }
 }
 
@@ -237,8 +233,7 @@ class AlertsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    return Center(child: Text('No favorites yet.'));
+    return const Center(child: Text('Página de Alertas'));
   }
 }
 
@@ -247,8 +242,7 @@ class ReportsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    return Center(child: Text('No favorites yet.'));
+    return const Center(child: Text('Página de Relatórios'));
   }
 }
 
@@ -257,7 +251,34 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    return Center(child: Text('No favorites yet.'));
+    return const Center(child: Text('Página de Configurações'));
+  }
+}
+
+class AuthenticationPage extends StatelessWidget {
+  const AuthenticationPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(child: Text('Página de Autenticação'));
+  }
+}
+
+class GridResidents extends StatelessWidget {
+  const GridResidents({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.count(
+      crossAxisCount: 3,
+      childAspectRatio: 5,
+      children: List.generate(10, (index) {
+        return const _ResidentCard(
+          cardName: 'Carlos',
+          cardImage: 'assets/images/avatar.png',
+          housingUnit: 'Casa 12',
+        );
+      }),
+    );
   }
 }
