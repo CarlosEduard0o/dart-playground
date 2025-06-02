@@ -3,6 +3,7 @@ import 'package:namer_app/components/alert_card_component.dart';
 import 'package:namer_app/components/resident_card_component.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
+import 'package:namer_app/components/title_page_component.dart';
 
 const List<String> list = <String>['Masculino', 'Feminino', 'Outro'];
 
@@ -14,56 +15,31 @@ class ResidentsPage extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Visão geral dos pacientes monitorados',
-                        style: TextStyle(
-                          fontSize:
-                              MediaQuery.of(context).size.width < 600 ? 24 : 32,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      SizedBox(height: 50),
-                      Text(
-                        'Buscar paciente',
-                        style: TextStyle(
-                            fontSize: MediaQuery.of(context).size.width < 600
-                                ? 16
-                                : 20,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black54),
-                      ),
-                      SizedBox(height: 10),
-                      SearchBar(
-                        leading: Icon(Icons.search),
-                        constraints: BoxConstraints(
-                            minWidth: 150.0,
-                            maxWidth: 400.0,
-                            minHeight: 40.0,
-                            maxHeight: 60.0),
-                      ),
-                    ],
+                TitlePage(title: 'Visão geral dos pacientes monitorados'),
+                SizedBox(height: 50),
+                Text(
+                  'Buscar paciente',
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.width < 600 ? 16 : 20,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black54,
                   ),
                 ),
-                const SizedBox(width: 32),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      AlertCard(),
-                    ],
-                  ),
+                SizedBox(height: 10),
+                SearchBar(
+                  leading: Icon(Icons.search),
+                  constraints: BoxConstraints(
+                      minWidth: 150.0,
+                      maxWidth: 400.0,
+                      minHeight: 40.0,
+                      maxHeight: 60.0),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 50),
             const Expanded(child: GridResidents()),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -266,7 +242,6 @@ class _SexDropdownButtonState extends State<SexDropdownButton> {
       icon: const Icon(Icons.arrow_downward),
       elevation: 16,
       onChanged: (String? value) {
-        // This is called when the user selects an item.
         setState(() {
           dropdownValue = value!;
         });

@@ -5,6 +5,14 @@ class AuthenticationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Página de Autenticação'));
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsetsGeometry.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [],
+        ),
+      ),
+    );
   }
 }
